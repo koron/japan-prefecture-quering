@@ -47,6 +47,38 @@ aql> SELECT name FROM test.demo WHERE gj CONTAINS CAST('{"type":"Point","coordin
 
 It looks good for the purpose.
 
+### register records
+
+Converted GeoJSON to TSV (see cmd/geojson2tsv).
+
+Imported TSV into aerospike (see cmd/import2as).
+
+    $ go build ./import2as
+    $ ./import2as -verbose data/japan_cities.tsv.xz
+
+Long records are rejected by aerospike.
+It must be removed by hand that over 1M bytes line.
+
+Try to query like this
+
+```
+aql> SELECT pref,boff,oc,city,code FROM test.demo WHERE gj CONTAINS CAST('{"type":"Point","coordinates":[139.780935,35.702265]}' as GEOJSON)
++-------------+------+-------------+------+---------+
+| pref        | boff | oc          | city | code    |
++-------------+------+-------------+------+---------+
+| "東京都" | ""   | "台東区" | ""   | "13106" |
++-------------+------+-------------+------+---------+
+1 row in set (0.030 secs)
+
+aql> SELECT pref,boff,oc,city,code FROM test.demo WHERE gj CONTAINS CAST('{"type":"Point","coordinates":[139.780935,35.702265]}' as GEOJSON)
++-------------+------+-------------+------+---------+
+| pref        | boff | oc          | city | code    |
++-------------+------+-------------+------+---------+
+| "東京都" | ""   | "台東区" | ""   | "13106" |
++-------------+------+-------------+------+---------+
+1 row in set (0.003 secs)
+```
+
 ### What's next?
 
 *   register records of Japanese prefecture
