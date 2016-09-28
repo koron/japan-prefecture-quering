@@ -1,2 +1,4 @@
 /.vagrant/
 /tmp/
+/data/japan_cities.tsv
+/*.exe
