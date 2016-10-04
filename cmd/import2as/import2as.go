@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	as "github.com/aerospike/aerospike-client-go"
+	humanize "github.com/dustin/go-humanize"
 	"github.com/ulikunitz/xz"
 )
 
@@ -91,8 +92,8 @@ func createIndex(c *as.Client) error {
 
 var (
 	optCreateIndex = flag.Bool("createindex", false, "create index at first")
-	optVerbose = flag.Bool("verbose", false, "show verbose messages")
-	optDryrun = flag.Bool("dryrun", false, "dry run")
+	optVerbose     = flag.Bool("verbose", false, "show verbose messages")
+	optDryrun      = flag.Bool("dryrun", false, "dry run")
 )
 
 func run() error {
@@ -122,6 +123,12 @@ func run() error {
 			oc := as.NewBin("oc", cols[3])
 			city := as.NewBin("city", cols[4])
 			code := as.NewBin("code", cols[5])
+			// skip too large entry
+			if l := len(cols[6]); l > 1024*1024 {
+				log.Printf("skipped a large entry: %#v (%s at %d)",
+					cols[:5], humanize.Bytes(uint64(l)), cnt)
+				return nil
+			}
 			gj := as.NewBin("gj", toGJV(cols[6]))
 			err := c.PutBins(nil, key, pref, boff, oc, city, code, gj)
 			if err != nil {
@@ -132,7 +139,7 @@ func run() error {
 				fmt.Printf("long line at %d\n", cnt)
 			}
 		}
-		if *optVerbose && cnt % 1000 == 0 {
+		if *optVerbose && cnt%1000 == 0 {
 			fmt.Printf("progress %d\n", cnt)
 		}
 		cnt++
