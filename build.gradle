@@ -9,3 +9,9 @@ dependencies {
     compile 'com.aerospike:aerospike-client:3.+'
 }
 apply plugin: 'java'
+
+jmh {
+    fork = 5
+    iterations = 10
+    warmupIterations = 20
+}
