@@ -1,4 +1,6 @@
-/.vagrant/
-/tmp/
-/data/japan_cities.tsv
 /*.exe
+/.gradle/
+/.vagrant/
+/build/
+/data/japan_cities.tsv
+/tmp/
