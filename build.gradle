@@ -12,6 +12,6 @@ apply plugin: 'java'
 
 jmh {
     fork = 5
-    iterations = 10
-    warmupIterations = 20
+    warmupIterations = 5
+    iterations = 20
 }
