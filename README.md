@@ -79,7 +79,27 @@ aql> SELECT pref,boff,oc,city,code FROM test.demo WHERE gj CONTAINS CAST('{"type
 1 row in set (0.003 secs)
 ```
 
-### What's next?
+### Benchmark query performance
 
-*   register records of Japanese prefecture
-*   measure performance of query with real data
+```
+Benchmark                            Mode  Cnt    Score   Error  Units
+QueryBenchmark.queryConstant        thrpt  100  372.560 ± 3.199  ops/s
+QueryBenchmark.queryRandomAllJapan  thrpt  100  139.029 ± 7.091  ops/s
+QueryBenchmark.queryRandomKanto     thrpt  100   67.493 ± 1.853  ops/s
+```
+
+```
+$ vagrant up
+$ unxz -k data/japan_cities.tsv.xz
+$ go build ./cmd/import2as
+$ ./import2as -verbose -createindex data/japan_cities.tsv
+$ gradle jmh
+```
+
+If `go build` was failed, try below commands to insntall dependencies.
+
+```
+$ go get -v -u github.com/aerospike/aerospike-client-go
+$ go get -v -u github.com/dustin/go-humanize
+$ go get -v -u github.com/ulikunitz/xz
+```
