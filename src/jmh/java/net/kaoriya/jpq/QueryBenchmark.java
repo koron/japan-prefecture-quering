@@ -24,6 +24,7 @@ public class QueryBenchmark {
         public long hitCount;
         public long missCount;
 
+        public Statement outConstStatement = newQueryStatement(0, 0);
         public Statement constStatement =
             newQueryStatement(139.780935, 35.702265);
         public Random r = new Random();
@@ -54,6 +55,12 @@ public class QueryBenchmark {
         public Statement randomKanto() {
             double lng = 138.6 + r.nextDouble() * 2.0;
             double lat = 35.2 + r.nextDouble() * 1.6;
+            return newQueryStatement(lng, lat);
+        }
+
+        public Statement randomOut() {
+            double lng = -1.0 + r.nextDouble() * 2.0;
+            double lat = -1.0 + r.nextDouble() * 2.0;
             return newQueryStatement(lng, lat);
         }
     }
@@ -100,6 +107,40 @@ public class QueryBenchmark {
     @Benchmark
     public void queryRandomKanto(Aerospike as) {
         Statement s = as.randomKanto();
+        try (RecordSet rs = as.client.query(null, s)) {
+            if (rs.next()) {
+                as.hitCount++;
+            } else {
+                as.missCount++;
+            }
+        }
+    }
+
+    /**
+     * Query constant outer point.
+     *
+     * hit-rate is 0%
+     */
+    @Benchmark
+    public void queryOutConstant(Aerospike as) {
+        Statement s = as.outConstStatement;
+        try (RecordSet rs = as.client.query(null, s)) {
+            if (rs.next()) {
+                as.hitCount++;
+            } else {
+                as.missCount++;
+            }
+        }
+    }
+
+    /**
+     * Query points on Kanto.
+     *
+     * hit-rate is about 0%
+     */
+    @Benchmark
+    public void queryOutRandom(Aerospike as) {
+        Statement s = as.randomOut();
         try (RecordSet rs = as.client.query(null, s)) {
             if (rs.next()) {
                 as.hitCount++;

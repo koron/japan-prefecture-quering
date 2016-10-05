@@ -82,10 +82,12 @@ aql> SELECT pref,boff,oc,city,code FROM test.demo WHERE gj CONTAINS CAST('{"type
 ### Benchmark query performance
 
 ```
-Benchmark                            Mode  Cnt    Score   Error  Units
-QueryBenchmark.queryConstant        thrpt  100  372.560 ± 3.199  ops/s
-QueryBenchmark.queryRandomAllJapan  thrpt  100  139.029 ± 7.091  ops/s
-QueryBenchmark.queryRandomKanto     thrpt  100   67.493 ± 1.853  ops/s
+Benchmark                            Mode  Cnt     Score    Error  Units
+QueryBenchmark.queryConstant        thrpt  100   383.016 ±  3.982  ops/s
+QueryBenchmark.queryOutConstant     thrpt  100  1506.053 ± 11.647  ops/s
+QueryBenchmark.queryOutRandom       thrpt  100  1489.143 ±  8.485  ops/s
+QueryBenchmark.queryRandomAllJapan  thrpt  100   144.591 ±  7.659  ops/s
+QueryBenchmark.queryRandomKanto     thrpt  100    70.607 ±  2.387  ops/s
 ```
 
 ```
