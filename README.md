@@ -105,3 +105,37 @@ $ go get -v -u github.com/aerospike/aerospike-client-go
 $ go get -v -u github.com/dustin/go-humanize
 $ go get -v -u github.com/ulikunitz/xz
 ```
+
+#### Benchmark with small data (only prefectures)
+
+```
+Benchmark                            Mode  Cnt     Score    Error  Units
+QueryBenchmark.queryConstant        thrpt  100   133.613 ±  0.752  ops/s
+QueryBenchmark.queryOutConstant     thrpt  100  1868.665 ± 13.626  ops/s
+QueryBenchmark.queryOutRandom       thrpt  100  1878.190 ±  6.964  ops/s
+QueryBenchmark.queryRandomAllJapan  thrpt  100   372.713 ±  7.644  ops/s
+QueryBenchmark.queryRandomKanto     thrpt  100   201.212 ±  1.972  ops/s
+```
+
+How to run benchmark with small data set.
+
+```
+$ vagrant destroy -f
+$ vagrant up
+$ go build ./cmd/import2as
+$ ./import2as -createindex -verbose ./data/japan.tsv.xz
+$ gradle jmh
+```
+
+It wastes about 3MB for data.
+
+```
+aql> show sets
++------------------+--------+~+-------------------+----------+
+| disable-eviction | ns     | | memory_data_bytes | deleting |
++------------------+--------+~+-------------------+----------+
+| "false"          | "test" | | 3113364           | "false"  |
++------------------+--------+~+-------------------+----------+
+1 row in set (0.000 secs)
+OK
+```
