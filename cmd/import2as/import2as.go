@@ -72,6 +72,10 @@ func enumTSV(r io.Reader, p procTSV) error {
 }
 
 func toGJV(s string) as.GeoJSONValue {
+	if strings.HasPrefix(s, "[[[[") {
+		return as.NewGeoJSONValue(
+			fmt.Sprintf(`{"type":"MultiPolygon","coordinates":%s}`, s))
+	}
 	return as.NewGeoJSONValue(
 		fmt.Sprintf(`{"type":"Polygon","coordinates":%s}`, s))
 }
@@ -103,14 +107,17 @@ func run() error {
 	}
 	defer r.Close()
 
-	c, err := as.NewClient("127.0.0.1", 3000)
-	if err != nil {
-		return err
-	}
-	defer c.Close()
-	if *optCreateIndex {
-		if err = createIndex(c); err != nil {
+	var c *as.Client
+	if !*optDryrun {
+		c, err = as.NewClient("127.0.0.1", 3000)
+		if err != nil {
 			return err
+		}
+		defer c.Close()
+		if *optCreateIndex {
+			if err = createIndex(c); err != nil {
+				return err
+			}
 		}
 	}
 

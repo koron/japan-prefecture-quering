@@ -2,5 +2,6 @@
 /.gradle/
 /.vagrant/
 /build/
-/data/japan_cities.tsv
+/data/*.geojson
+/data/*.tsv
 /tmp/
