@@ -70,7 +70,7 @@ public class QueryBenchmark {
      *
      * hit-rate is 100%
      */
-    @Benchmark
+    //@Benchmark
     public void queryConstant(Aerospike as) {
         Statement s = as.constStatement;
         try (RecordSet rs = as.client.query(null, s)) {
@@ -87,7 +87,7 @@ public class QueryBenchmark {
      *
      * hit-rate is about 25%
      */
-    @Benchmark
+    //@Benchmark
     public void queryRandomAllJapan(Aerospike as) {
         Statement s = as.randomAllJapan();
         try (RecordSet rs = as.client.query(null, s)) {
@@ -104,7 +104,7 @@ public class QueryBenchmark {
      *
      * hit-rate is about 92%
      */
-    @Benchmark
+    //@Benchmark
     public void queryRandomKanto(Aerospike as) {
         Statement s = as.randomKanto();
         try (RecordSet rs = as.client.query(null, s)) {
@@ -121,7 +121,7 @@ public class QueryBenchmark {
      *
      * hit-rate is 0%
      */
-    @Benchmark
+    //@Benchmark
     public void queryOutConstant(Aerospike as) {
         Statement s = as.outConstStatement;
         try (RecordSet rs = as.client.query(null, s)) {
@@ -138,7 +138,7 @@ public class QueryBenchmark {
      *
      * hit-rate is about 0%
      */
-    @Benchmark
+    //@Benchmark
     public void queryOutRandom(Aerospike as) {
         Statement s = as.randomOut();
         try (RecordSet rs = as.client.query(null, s)) {

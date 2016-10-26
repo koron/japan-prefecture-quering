@@ -20,7 +20,8 @@ run {
 }
 
 jmh {
-    fork = 5
+    duplicateClassesStrategy = 'include'
+    fork = 1
     warmupIterations = 5
-    iterations = 20
+    iterations = 10
 }

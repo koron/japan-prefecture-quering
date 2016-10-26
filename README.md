@@ -141,3 +141,27 @@ OK
 ```
 
 Data from <https://github.com/dataofjapan/land>
+
+#### Benchmark of quering S2CellUnion only
+
+For small dataset (47 regions), max cell unit 48 
+
+```
+Benchmark                                   Mode  Cnt      Score       Error  Units
+BenchmarkShortDataset.queryConstantTokyo   thrpt    4  65388.519 ±  6562.859  ops/s
+BenchmarkShortDataset.queryConstantZero    thrpt    4  67597.003 ±  4421.311  ops/s
+BenchmarkShortDataset.queryRandomAllJapan  thrpt    4  64671.556 ±  6365.595  ops/s
+BenchmarkShortDataset.queryRandomKanto     thrpt    4  64830.067 ±  8364.964  ops/s
+BenchmarkShortDataset.queryRandomOut       thrpt    4  66088.738 ± 10098.824  ops/s
+```
+
+For large dataset (73274 regions), max cells is 48
+
+```
+Benchmark                                  Mode  Cnt    Score   Error  Units
+BenchmarkLongDataset.queryConstantTokyo   thrpt   10  136.423 ± 3.463  ops/s
+BenchmarkLongDataset.queryConstantZero    thrpt   10  142.088 ± 1.405  ops/s
+BenchmarkLongDataset.queryRandomAllJapan  thrpt   10  138.944 ± 0.742  ops/s
+BenchmarkLongDataset.queryRandomKanto     thrpt   10  136.385 ± 3.174  ops/s
+BenchmarkLongDataset.queryRandomOut       thrpt   10  140.771 ± 4.800  ops/s
+```

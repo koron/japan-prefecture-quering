@@ -28,15 +28,6 @@ import com.univocity.parsers.common.record.Record;
 
 public class Database {
 
-    public static class Region {
-        public String pref;
-        public String boff;
-        public String oc;
-        public String city;
-        public String code;
-        public S2CellUnion cellUnion;
-    }
-
     S2RegionCoverer coverer = new S2RegionCoverer();
     ArrayList<Region> regions = new ArrayList<>();
 
