@@ -25,7 +25,7 @@ public class BenchmarkLongDataset {
         public long missCount;
 
         public final LatLng zeroLatLng = new LatLng(0, 0);
-        public final LatLng constTokyo = new LatLng(139.780935, 35.702265);
+        public final LatLng constTokyo = new LatLng(35.702265, 139.780935);
 
         @Setup(Level.Trial)
         public void setup() {
