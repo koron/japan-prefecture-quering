@@ -165,3 +165,12 @@ BenchmarkLongDataset.queryRandomAllJapan  thrpt   10  138.944 ± 0.742  ops/s
 BenchmarkLongDataset.queryRandomKanto     thrpt   10  136.385 ± 3.174  ops/s
 BenchmarkLongDataset.queryRandomOut       thrpt   10  140.771 ± 4.800  ops/s
 ```
+
+Considering costs to compare.
+
+```
+>>> 47 * 65000
+3055000
+>>> 73274 * 135
+9891990
+```
