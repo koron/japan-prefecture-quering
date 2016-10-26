@@ -5,3 +5,5 @@
 /data/*.geojson
 /data/*.tsv
 /tmp/
+
+tags

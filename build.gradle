@@ -7,8 +7,17 @@ repositories {
 }
 dependencies {
     compile 'com.aerospike:aerospike-client:3.+'
+    compile 'org.isuper:s2-geometry-library-java:0.0.1'
+    compile 'com.univocity:univocity-parsers:2.2.2'
+    compile 'javax.json:javax.json-api:1.0'
+    compile 'org.glassfish:javax.json:1.0.+'
 }
 apply plugin: 'java'
+apply plugin: 'application'
+
+run {
+    mainClassName = 'net.kaoriya.jpquery.Loader'
+}
 
 jmh {
     fork = 5
