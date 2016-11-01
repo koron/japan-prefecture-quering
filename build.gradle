@@ -15,10 +15,6 @@ dependencies {
 apply plugin: 'java'
 apply plugin: 'application'
 
-run {
-    mainClassName = 'net.kaoriya.jpquery.Loader'
-}
-
 jmh {
     duplicateClassesStrategy = 'include'
     fork = 1
@@ -26,8 +22,13 @@ jmh {
     iterations = 10
 }
 
+task 'load-tsv' (type:JavaExec) {
+    main = 'net.kaoriya.jpquery.cmd.Loader'
+    classpath = sourceSets.main.runtimeClasspath
+}
+
 task covering(type:JavaExec) {
-    main = 'net.kaoriya.jpquery.Covering'
+    main = 'net.kaoriya.jpquery.cmd.Covering'
     classpath = sourceSets.main.runtimeClasspath
 }
 

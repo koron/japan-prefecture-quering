@@ -1,6 +1,8 @@
-package net.kaoriya.jpquery;
+package net.kaoriya.jpquery.cmd;
 
 import java.io.File;
+
+import net.kaoriya.jpquery.Database;
 
 public class Loader {
     public static void main(String[] args) throws Exception {
