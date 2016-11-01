@@ -30,3 +30,8 @@ task covering(type:JavaExec) {
     main = 'net.kaoriya.jpquery.Covering'
     classpath = sourceSets.main.runtimeClasspath
 }
+
+task 'load-long-index' (type:JavaExec) {
+    main = 'net.kaoriya.jpquery.cmd.LoadLongIndex'
+    classpath = sourceSets.main.runtimeClasspath
+}

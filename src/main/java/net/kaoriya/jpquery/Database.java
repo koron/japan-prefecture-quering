@@ -19,17 +19,18 @@ import javax.json.JsonArray;
 import com.google.common.geometry.S2CellUnion;
 import com.google.common.geometry.S2LatLng;
 import com.google.common.geometry.S2Loop;
-import com.google.common.geometry.S2RegionCoverer;
 import com.google.common.geometry.S2Point;
 import com.google.common.geometry.S2Polygon;
 import com.google.common.geometry.S2PolygonBuilder;
+import com.google.common.geometry.S2RegionCoverer;
+import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 import com.univocity.parsers.tsv.TsvWriter;
 import com.univocity.parsers.tsv.TsvWriterSettings;
-import com.univocity.parsers.common.record.Record;
 
 public class Database {
+    public static final S2CellUnion INVALID_CELLUNION = new S2CellUnion();
 
     S2RegionCoverer coverer = new S2RegionCoverer();
     ArrayList<Region> regions = new ArrayList<>();
@@ -83,21 +84,6 @@ public class Database {
         return reg;
     }
 
-    S2CellUnion toCU(String coords) {
-        boolean multi = false;
-        if (coords.startsWith("[[[[")) {
-            multi = true;
-        } else if (coords.startsWith("[[[")) {
-            multi = false;
-        } else {
-            return null;
-        }
-        try (JsonReader jr = Json.createReader(new StringReader(coords))) {
-            JsonArray array = jr.readArray();
-            return multi ? toMultiCU(array) : toCU(array);
-        }
-    }
-
     S2Point arrayToPoint(JsonArray array) {
         double longitude = array.getJsonNumber(0).doubleValue();
         double latitude = array.getJsonNumber(1).doubleValue();
@@ -121,13 +107,37 @@ public class Database {
         }
     }
 
+    S2CellUnion toCU(String coords) {
+        if (coverer == null) {
+            return INVALID_CELLUNION;
+        }
+        boolean multi = false;
+        if (coords.startsWith("[[[[")) {
+            multi = true;
+        } else if (coords.startsWith("[[[")) {
+            multi = false;
+        } else {
+            return null;
+        }
+        try (JsonReader jr = Json.createReader(new StringReader(coords))) {
+            JsonArray array = jr.readArray();
+            return multi ? toMultiCU(array) : toCU(array);
+        }
+    }
+
     S2CellUnion toCU(JsonArray array) {
+        if (coverer == null) {
+            return INVALID_CELLUNION;
+        }
         S2PolygonBuilder b = new S2PolygonBuilder();
         appendAsPolygon(b, array);
         return coverer.getCovering(b.assemblePolygon());
     }
 
     S2CellUnion toMultiCU(JsonArray array) {
+        if (coverer == null) {
+            return INVALID_CELLUNION;
+        }
         S2PolygonBuilder b = new S2PolygonBuilder();
         for (int i = 0; i < array.size(); ++i) {
             JsonArray item = array.getJsonArray(i);
