@@ -25,3 +25,8 @@ jmh {
     warmupIterations = 5
     iterations = 10
 }
+
+task covering(type:JavaExec) {
+    main = 'net.kaoriya.jpquery.Covering'
+    classpath = sourceSets.main.runtimeClasspath
+}

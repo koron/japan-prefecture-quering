@@ -1,6 +1,7 @@
 package net.kaoriya.jpquery;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -24,6 +25,8 @@ import com.google.common.geometry.S2Polygon;
 import com.google.common.geometry.S2PolygonBuilder;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
+import com.univocity.parsers.tsv.TsvWriter;
+import com.univocity.parsers.tsv.TsvWriterSettings;
 import com.univocity.parsers.common.record.Record;
 
 public class Database {
@@ -138,5 +141,31 @@ public class Database {
         return regions.parallelStream()
             .filter(r -> r.cellUnion.contains(p))
             .collect(Collectors.toList());
+    }
+
+    public void writeCoverCells(File file) throws IOException {
+        writeCoverCells(file.toPath());
+    }
+
+    public void writeCoverCells(Path path) throws IOException {
+        try (
+                BufferedWriter bw = Files.newBufferedWriter(path,
+                    Charset.forName("UTF-8"))
+        ) {
+            TsvWriterSettings s = new TsvWriterSettings();
+            TsvWriter w = new TsvWriter(bw, s);
+            try {
+                for (Region r : regions) {
+                    int sz = r.cellUnion.size();
+                    String[] ids = new String[sz];
+                    for (int i = 0; i < sz; ++i) {
+                        ids[i] = Long.toString(r.cellUnion.cellId(i).id());
+                    }
+                    w.writeRow(ids);
+                }
+            } finally {
+                w.close();
+            }
+        }
     }
 }
