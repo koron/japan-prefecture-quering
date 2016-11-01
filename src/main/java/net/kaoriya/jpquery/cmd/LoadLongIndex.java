@@ -9,5 +9,6 @@ public class LoadLongIndex {
         File f = new File("./data/japan_cities-covercells.tsv");
         LongIndex idx = LongIndex.loadTSV(f);
         idx.sort();
+        //idx.levelCheck();
     }
 }

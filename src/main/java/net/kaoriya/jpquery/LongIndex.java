@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+import com.google.common.geometry.S2CellId;
 import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
@@ -117,5 +118,17 @@ public class LongIndex implements Sortable {
 
     public void sort() {
         Sort.sort(this, 0, values.length);
+    }
+
+    public void levelCheck() {
+        int[] levels = new int[31];
+        for (int i = 0; i < values.length; ++i) {
+            S2CellId cid = new S2CellId(values[i]);
+            levels[cid.level()]++;
+        }
+        for (int i = 0; i < levels.length; ++i) {
+            System.out.printf("%d: %d/%d (%.5f)\n", i, levels[i],
+                    values.length, (double)levels[i] / values.length);
+        }
     }
 }
