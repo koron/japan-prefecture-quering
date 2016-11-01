@@ -13,13 +13,14 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import intervalTree.IntervalTree;
 
-public class BenchmarkLongDataset {
+public class BenchmarkIntervalTree {
 
     @State(Scope.Benchmark)
     public static class Dataset {
         public Random r;
-        public Database db;
+        public IntervalTree<Integer> tree;
 
         public long hitCount;
         public long missCount;
@@ -30,9 +31,11 @@ public class BenchmarkLongDataset {
         @Setup(Level.Trial)
         public void setup() {
             r = new Random();
-            db = new Database();
             try {
-                db.loadTSV(new File("./data/japan_cities.tsv"));
+                File f = new File("./data/japan_cities-covercells.tsv");
+                LongIndex idx = LongIndex.loadTSV(f);
+                idx.sort();
+                tree = IntervalTreeBuilder.build(idx);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -42,7 +45,7 @@ public class BenchmarkLongDataset {
 
         @TearDown(Level.Trial)
         public void tearDown() {
-            db = null;
+            tree = null;
             System.out.println();
             System.out.println(String.format(
                         "hit:%d miss:%d rate:%.3f", hitCount, missCount,
@@ -67,13 +70,13 @@ public class BenchmarkLongDataset {
             return new LatLng(lat, lng);
         }
 
-        public List<Region> query(LatLng p) {
-            return db.find(p.lat, p.lng);
+        public List<Integer> query(LatLng p) {
+            return tree.get(p.toS2CellId().id());
         }
     }
 
-    void checkList(Dataset ds, List<Region> regions) {
-        if (regions == null || regions.size() < 1) {
+    void checkList(Dataset ds, List<Integer> indexes) {
+        if (indexes == null || indexes.size() < 1) {
             ds.missCount++;
         } else {
             ds.hitCount++;
@@ -85,27 +88,27 @@ public class BenchmarkLongDataset {
      *
      * hit-rate should be 100%
      */
-    //@Benchmark
+    @Benchmark
     public void queryConstantTokyo(Dataset ds) {
         checkList(ds, ds.query(ds.constTokyo));
     }
 
-    //@Benchmark
+    @Benchmark
     public void queryRandomAllJapan(Dataset ds) {
         checkList(ds, ds.query(ds.randomAllJapan()));
     }
 
-    //@Benchmark
+    @Benchmark
     public void queryRandomKanto(Dataset ds) {
         checkList(ds, ds.query(ds.randomKanto()));
     }
 
-    //@Benchmark
+    @Benchmark
     public void queryConstantZero(Dataset ds) {
         checkList(ds, ds.query(ds.zeroLatLng));
     }
 
-    //@Benchmark
+    @Benchmark
     public void queryRandomOut(Dataset ds) {
         checkList(ds, ds.query(ds.randomOut()));
     }

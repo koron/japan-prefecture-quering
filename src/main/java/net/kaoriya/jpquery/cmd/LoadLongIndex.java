@@ -10,7 +10,7 @@ public class LoadLongIndex {
         File f = new File("./data/japan_cities-covercells.tsv");
         LongIndex idx = LongIndex.loadTSV(f);
         idx.sort();
-        //idx.levelCheck();
+        idx.levelCheck();
         long st = System.currentTimeMillis();
         IntervalTreeBuilder.build(idx);
         long du = System.currentTimeMillis() - st;

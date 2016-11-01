@@ -174,3 +174,16 @@ Considering costs to compare.
 >>> 73274 * 135
 9891990
 ```
+
+#### Benchmark of interval tree with cell ID
+
+With 2.7M cells:
+
+```
+Benchmark                                   Mode  Cnt        Score       Error  Units
+BenchmarkIntervalTree.queryConstantTokyo   thrpt   10   701824.038 ±  4918.583  ops/s
+BenchmarkIntervalTree.queryConstantZero    thrpt   10  1014254.861 ± 11848.582  ops/s
+BenchmarkIntervalTree.queryRandomAllJapan  thrpt   10   486363.300 ±  3293.157  ops/s
+BenchmarkIntervalTree.queryRandomKanto     thrpt   10   511906.224 ±  8675.686  ops/s
+BenchmarkIntervalTree.queryRandomOut       thrpt   10   928550.998 ±  6212.887  ops/s
+```
