@@ -12,7 +12,7 @@ import com.univocity.parsers.common.record.Record;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
-public class LongIndex {
+public class LongIndex implements Sortable {
 
     static class Group {
         int index;
@@ -86,5 +86,36 @@ public class LongIndex {
         Loader l = new Loader();
         l.load(file);
         return l.toLongIndex();
+    }
+
+    public int compare(int a, int b) {
+        if (a == b) {
+            return 0;
+        }
+        long va = values[a];
+        long vb = values[b];
+        if (va < vb) {
+            return -1;
+        } else if (va > vb) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public void swap(int a, int b) {
+        if (a == b) {
+            return;
+        }
+        long v = values[a];
+        values[a] = values[b];
+        values[b] = v;
+        int x = indexes[a];
+        indexes[a] = indexes[b];
+        indexes[b] = x;
+    }
+
+    public void sort() {
+        Sort.sort(this, 0, values.length);
     }
 }
